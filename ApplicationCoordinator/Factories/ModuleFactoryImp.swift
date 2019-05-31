@@ -1,6 +1,6 @@
-protocol ModuleFactory: AuthModuleFactory, OnboardingModuleFactory, ItemModuleFactory, ItemCreateModuleFactory, SettingsModuleFactory {}
+protocol ModuleFactoryProtocol: AuthModuleFactory, OnboardingModuleFactory, ItemModuleFactory, ItemCreateModuleFactory, SettingsModuleFactory {}
 
-final class ModuleFactoryImp: ModuleFactory {
+final class ModuleFactory: ModuleFactoryProtocol {
     
     // MARK: - ---------------------- AuthModuleFactory --------------------------
     //

@@ -11,7 +11,7 @@ import XCTest
 
 class BaseCoordinatorTest: XCTestCase {
     
-    var coordinator: BaseCoordinator!
+    var coordinator: BaseCoordinator<EmptyAction>!
 
     override func setUp() {
         super.setUp()
@@ -29,14 +29,13 @@ class BaseCoordinatorTest: XCTestCase {
     }
     
     func testCoordinatorAddDependency() {
-        
         coordinator.addDependency(coordinator)
-        XCTAssertTrue(coordinator.childCoordinators.first is BaseCoordinator)
+        XCTAssertTrue(coordinator.childCoordinators.first is BaseCoordinator<EmptyAction>)
         XCTAssertTrue(coordinator.childCoordinators.count == 1)
         coordinator.addDependency(coordinator)
         XCTAssertTrue(coordinator.childCoordinators.count == 1, "Only unique reference could be added")
         
-        let newCoordinator = BaseCoordinator()
+        let newCoordinator = BaseCoordinator<DismissAction>()
         coordinator.addDependency(newCoordinator)
         XCTAssertTrue(coordinator.childCoordinators.count == 2)
     }
@@ -44,7 +43,7 @@ class BaseCoordinatorTest: XCTestCase {
     func testCoordinatorRemoveDependency() {
         
         coordinator.addDependency(coordinator)
-        XCTAssertTrue(coordinator.childCoordinators.first is BaseCoordinator)
+        XCTAssertTrue(coordinator.childCoordinators.first is BaseCoordinator<EmptyAction>)
         coordinator.removeDependency(coordinator)
         XCTAssertTrue(coordinator.childCoordinators.isEmpty)
         coordinator.removeDependency(coordinator)

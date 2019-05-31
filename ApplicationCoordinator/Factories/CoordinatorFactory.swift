@@ -25,7 +25,7 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
     }
     
     func makeAuthCoordinatorBox(router: RouterProtocol) -> AuthCoordinator {
-        let coordinator = AuthCoordinator(router: router, factory: ModuleFactoryImp())
+        let coordinator = AuthCoordinator(router: router, factory: ModuleFactory())
         return coordinator
     }
     
@@ -34,11 +34,11 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
     }
     
     func makeOnboardingCoordinator(router: RouterProtocol) -> OnboardingCoordinator {
-        return OnboardingCoordinator(with: ModuleFactoryImp(), router: router)
+        return OnboardingCoordinator(with: ModuleFactory(), router: router)
     }
     
     func makeItemCoordinator(navController: UINavigationController?) -> Coordinator {
-        return ItemCoordinator(router: router(navController), factory: ModuleFactoryImp(), coordinatorFactory: CoordinatorFactory())
+        return ItemCoordinator(router: router(navController), factory: ModuleFactory(), coordinatorFactory: CoordinatorFactory())
     }
     
     func makeSettingsCoordinator() -> Coordinator {
@@ -46,7 +46,7 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
     }
     
     func makeSettingsCoordinator(navController: UINavigationController? = nil) -> Coordinator {
-        let coordinator = SettingsCoordinator(router: router(navController), factory: ModuleFactoryImp())
+        let coordinator = SettingsCoordinator(router: router(navController), factory: ModuleFactory())
         return coordinator
     }
     
@@ -57,7 +57,7 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
     func makeItemCreationCoordinatorBox(navController: UINavigationController?) -> (configurator: ItemCreateCoordinator, toPresent: Presentable?) {
         
         let router = self.router(navController)
-        let coordinator = ItemCreateCoordinator(router: router, factory: ModuleFactoryImp())
+        let coordinator = ItemCreateCoordinator(router: router, factory: ModuleFactory())
         return (coordinator, router)
     }
     
