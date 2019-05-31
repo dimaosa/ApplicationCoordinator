@@ -19,9 +19,9 @@ protocol Coordinator: class {
     func start(with option: DeepLinkOption?)
 }
 ```
-All flow controllers have a protocols (we need to configure blocks and handle callbacks in coordinators):
+All flow controllers(views or viewcontrollers) have a protocols (we need to configure blocks and handle callbacks in coordinators):
 ```swift
-protocol ItemsListView: BaseView {
+protocol ItemsListPresentable: BasePResentable {
     var authNeed: (() -> ())? { get set }
     var onItemSelect: (ItemList -> ())? { get set }
     var onCreateButtonTap: (() -> ())? { get set }
@@ -77,7 +77,7 @@ var rootController: UINavigationController {
     return self.window!.rootViewController as! UINavigationController
   }
   
-  private lazy var applicationCoordinator: Coordinator = self.makeCoordinator()
+  private lazy var applicationCoordinator: Coordinator = makeCoordinator()
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
