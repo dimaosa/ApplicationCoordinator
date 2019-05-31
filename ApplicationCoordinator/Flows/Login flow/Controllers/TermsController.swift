@@ -1,4 +1,9 @@
-class TermsController: UIViewController, TermsView {
+protocol TermsPresentable: BasePresentable {
+    var confirmed: Bool { get set }
+    var onConfirmChanged: Closure<Bool>? { get set }
+}
+
+class TermsController: UIViewController, TermsPresentable {
   
   @IBOutlet weak var termsSwitch: UISwitch! {
     didSet { termsSwitch.isOn = confirmed }

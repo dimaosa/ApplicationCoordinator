@@ -1,17 +1,17 @@
-class TabbarCoordinator: BaseCoordinator {
+class TabbarCoordinator: BaseCoordinator<EmptyAction> {
   
-  private let tabbarView: TabbarView
-  private let coordinatorFactory: CoordinatorFactory
+  private let tabbarPresentable: TabbarPresentable
+  private let coordinatorFactory: CoordinatorFactoryProtocol
   
-  init(tabbarView: TabbarView, coordinatorFactory: CoordinatorFactory) {
-    self.tabbarView = tabbarView
+  init(tabbarPresentable: TabbarPresentable, coordinatorFactory: CoordinatorFactoryProtocol) {
+    self.tabbarPresentable = tabbarPresentable
     self.coordinatorFactory = coordinatorFactory
   }
   
   override func start() {
-    tabbarView.onViewDidLoad = runItemFlow()
-    tabbarView.onItemFlowSelect = runItemFlow()
-    tabbarView.onSettingsFlowSelect = runSettingsFlow()
+    tabbarPresentable.onViewDidLoad = runItemFlow()
+    tabbarPresentable.onItemFlowSelect = runItemFlow()
+    tabbarPresentable.onSettingsFlowSelect = runSettingsFlow()
   }
   
   private func runItemFlow() -> ((UINavigationController) -> ()) {

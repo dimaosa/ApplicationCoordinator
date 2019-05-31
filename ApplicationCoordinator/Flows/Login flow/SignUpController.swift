@@ -1,18 +1,16 @@
-final class SignUpController: UIViewController, SignUpView {
-  
-  //controller handler
-  var onSignUpComplete: (() -> Void)?
-  var onTermsButtonTap: (() -> Void)?
-  
+protocol SignUpPresentable: BasePresentable {
+    
+    var confirmed: Bool { get set }
+    var onSignUpComplete: CallbackClosure? { get set }
+    var onTermsButtonTap: CallbackClosure? { get set }
+    
+    func conformTermsAgreement(_ agree: Bool)
+}
+
+final class SignUpController: UIViewController, SignUpPresentable {
   @IBOutlet weak var termsLabel: UILabel!
   @IBOutlet weak var signUpButton: UIButton!
   
-  var confirmed = false {
-    didSet {
-      termsLabel.isHidden = !confirmed
-      signUpButton.isEnabled = confirmed
-    }
-  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -31,8 +29,19 @@ final class SignUpController: UIViewController, SignUpView {
   @IBAction func termsButtonClicked(_ sender: AnyObject) {
     onTermsButtonTap?()
   }
-  
-  func conformTermsAgreement(_ agree: Bool) {
-    confirmed = agree
-  }
+
+    // MARK: - ---------------------- SignUpPresentable --------------------------
+    //
+    var onSignUpComplete: CallbackClosure?
+    var onTermsButtonTap: CallbackClosure?
+    
+    var confirmed = false {
+        didSet {
+            termsLabel.isHidden = !confirmed
+            signUpButton.isEnabled = confirmed
+        }
+    }
+    func conformTermsAgreement(_ agree: Bool) {
+        confirmed = agree
+    }
 }

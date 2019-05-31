@@ -1,9 +1,9 @@
-final class SettingsCoordinator: BaseCoordinator {
+final class SettingsCoordinator: BaseCoordinator<EmptyAction> {
   
   private let factory: SettingsModuleFactory
-  private let router: Router
+  private let router: RouterProtocol
   
-  init(router: Router, factory: SettingsModuleFactory) {
+  init(router: RouterProtocol, factory: SettingsModuleFactory) {
     self.factory = factory
     self.router = router
   }

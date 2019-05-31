@@ -1,11 +1,14 @@
-final class ItemCreateCoordinator: BaseCoordinator, ItemCreateCoordinatorOutput {
-  
-  var finishFlow: ((ItemList?)->())?
-  
+enum ItemCreateAction: ActionProtocol {
+    case dismissFlow
+    case item(ItemList)
+}
+
+final class ItemCreateCoordinator: BaseCoordinator<ItemCreateAction>{
+    
   private let factory: ItemCreateModuleFactory
-  private let router: Router
+  private let router: RouterProtocol
   
-  init(router: Router, factory: ItemCreateModuleFactory) {
+  init(router: RouterProtocol, factory: ItemCreateModuleFactory) {
     self.factory = factory
     self.router = router
   }
@@ -19,10 +22,10 @@ final class ItemCreateCoordinator: BaseCoordinator, ItemCreateCoordinatorOutput 
   private func showCreate() {
     let createItemOutput = factory.makeItemAddOutput()
     createItemOutput.onCompleteCreateItem = { [weak self] item in
-      self?.finishFlow?(item)
+      self?.listener?(.item(item))
     }
     createItemOutput.onHideButtonTap = { [weak self] in
-      self?.finishFlow?(nil)
+      self?.listener?(.dismissFlow)
     }
     router.setRootModule(createItemOutput)
   }

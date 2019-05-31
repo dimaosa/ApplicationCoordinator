@@ -1,10 +1,10 @@
-final class ItemCoordinator: BaseCoordinator {
+final class ItemCoordinator: BaseCoordinator<EmptyAction> {
   
   private let factory: ItemModuleFactory
-  private let coordinatorFactory: CoordinatorFactory
-  private let router: Router
+  private let coordinatorFactory: CoordinatorFactoryProtocol
+  private let router: RouterProtocol
   
-  init(router: Router, factory: ItemModuleFactory, coordinatorFactory: CoordinatorFactory) {
+  init(router: RouterProtocol, factory: ItemModuleFactory, coordinatorFactory: CoordinatorFactoryProtocol) {
     self.router = router
     self.factory = factory
     self.coordinatorFactory = coordinatorFactory
@@ -39,13 +39,15 @@ final class ItemCoordinator: BaseCoordinator {
   private func runCreationFlow() {
     
     let (coordinator, module) = coordinatorFactory.makeItemCreationCoordinatorBox()
-    coordinator.finishFlow = { [weak self, weak coordinator] item in
-      
-      self?.router.dismissModule()
-      self?.removeDependency(coordinator)
-      if let item = item {
-        self?.showItemDetail(item)
-      }
+    coordinator.listener = { [weak self, weak coordinator] action in
+        self?.router.dismissModule()
+        self?.removeDependency(coordinator)
+        switch action {
+        case let .item(item):
+            self?.showItemDetail(item)
+        case .dismissFlow:
+            break
+        }
     }
     addDependency(coordinator)
     router.present(module)

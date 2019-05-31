@@ -1,8 +1,13 @@
-final class ItemsListController: UIViewController, ItemsListView {
+protocol ItemsListPresentable: BasePresentable {
+    var onItemSelect: Closure<ItemList>? { get set }
+    var onCreateItem: CallbackClosure? { get set }
+}
+
+final class ItemsListController: UIViewController, ItemsListPresentable {
   
   //controller handler
   var onItemSelect: ((ItemList) -> ())?
-  var onCreateItem: (() -> Void)?
+  var onCreateItem: CallbackClosure?
   
   @IBAction func addItemButtonClicked(_ sender: UIBarButtonItem) { onCreateItem?() }
   

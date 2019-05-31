@@ -1,12 +1,11 @@
-final class AuthCoordinator: BaseCoordinator, AuthCoordinatorOutput {
-  
-  var finishFlow: (() -> Void)?
-  
+
+final class AuthCoordinator: BaseCoordinator<DismissAction> {
+    
   private let factory: AuthModuleFactory
-  private let router: Router
-  private weak var signUpView: SignUpView?
+  private let router: RouterProtocol
+  private weak var signUpView: SignUpPresentable?
   
-  init(router: Router, factory: AuthModuleFactory) {
+  init(router: RouterProtocol, factory: AuthModuleFactory) {
     self.factory = factory
     self.router = router
   }
@@ -20,7 +19,7 @@ final class AuthCoordinator: BaseCoordinator, AuthCoordinatorOutput {
   private func showLogin() {
     let loginOutput = factory.makeLoginOutput()
     loginOutput.onCompleteAuth = { [weak self] in
-      self?.finishFlow?()
+      self?.listener?(.dismissFlow)
     }
     loginOutput.onSignUpButtonTap = { [weak self] in
       self?.showSignUp()
@@ -31,7 +30,7 @@ final class AuthCoordinator: BaseCoordinator, AuthCoordinatorOutput {
   private func showSignUp() {
     signUpView = factory.makeSignUpHandler()
     signUpView?.onSignUpComplete = { [weak self] in
-      self?.finishFlow?()
+      self?.listener?(.dismissFlow)
     }
     signUpView?.onTermsButtonTap = { [weak self] in
       self?.showTerms()

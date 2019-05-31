@@ -1,7 +1,12 @@
-final class ItemCreateController: UIViewController, ItemCreateView {
+protocol ItemCreatePresentable: BasePresentable {
+    var onHideButtonTap: CallbackClosure? { get set }
+    var onCompleteCreateItem: ((ItemList) -> ())? { get set }
+}
+
+final class ItemCreateController: UIViewController, ItemCreatePresentable {
   
   //controller handler
-  var onHideButtonTap: (() -> Void)?
+  var onHideButtonTap: CallbackClosure?
   var onCompleteCreateItem: ((ItemList) -> ())?
   
   override func viewDidLoad() {

@@ -1,4 +1,6 @@
-final class ItemDetailController: UIViewController, ItemDetailView {
+protocol ItemDetailPresentable: BasePresentable { }
+
+final class ItemDetailController: UIViewController, ItemDetailPresentable {
   
   //controller handler
   var itemList: ItemList?

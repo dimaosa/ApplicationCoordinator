@@ -1,42 +1,48 @@
-final class ModuleFactoryImp:
-  AuthModuleFactory,
-  OnboardingModuleFactory,
-  ItemModuleFactory,
-  ItemCreateModuleFactory,
-  SettingsModuleFactory {
-  
-  func makeLoginOutput() -> LoginView {
-    return LoginController.controllerFromStoryboard(.auth)
-  }
-  
-  func makeSignUpHandler() -> SignUpView {
-    return SignUpController.controllerFromStoryboard(.auth)
-  }
-  
-  func makeOnboardingModule() -> OnboardingView {
-    return OnboardingController.controllerFromStoryboard(.onboarding)
-  }
-  
-  func makeTermsOutput() -> TermsView {
-    return TermsController.controllerFromStoryboard(.auth)
-  }
-  
-  func makeItemsOutput() -> ItemsListView {
-    return ItemsListController.controllerFromStoryboard(.items)
-  }
-  
-  func makeItemDetailOutput(item: ItemList) -> ItemDetailView {
+protocol ModuleFactory: AuthModuleFactory, OnboardingModuleFactory, ItemModuleFactory, ItemCreateModuleFactory, SettingsModuleFactory {}
+
+final class ModuleFactoryImp: ModuleFactory {
     
-    let controller = ItemDetailController.controllerFromStoryboard(.items)
-    controller.itemList = item
-    return controller
-  }
-  
-  func makeItemAddOutput() -> ItemCreateView {
-    return ItemCreateController.controllerFromStoryboard(.create)
-  }
-  
-  func makeSettingsOutput() -> SettingsView {
-    return SettingsController.controllerFromStoryboard(.settings)
-  }
+    // MARK: - ---------------------- AuthModuleFactory --------------------------
+    //
+    func makeLoginOutput() -> LoginPresentable {
+        return LoginController.controllerFromStoryboard(.auth)
+    }
+    
+    func makeSignUpHandler() -> SignUpPresentable {
+        return SignUpController.controllerFromStoryboard(.auth)
+    }
+    
+    func makeTermsOutput() -> TermsPresentable {
+        return TermsController.controllerFromStoryboard(.auth)
+    }
+    
+    // MARK: - ---------------------- OnboardingModuleFactory --------------------------
+    //
+    func makeOnboardingModule() -> OnboardingPresentable {
+        return OnboardingController.controllerFromStoryboard(.onboarding)
+    }
+    
+    // MARK: - ---------------------- ItemModuleFactory --------------------------
+    //
+    func makeItemsOutput() -> ItemsListPresentable {
+        return ItemsListController.controllerFromStoryboard(.items)
+    }
+    
+    func makeItemDetailOutput(item: ItemList) -> ItemDetailPresentable {
+        let controller = ItemDetailController.controllerFromStoryboard(.items)
+        controller.itemList = item
+        return controller
+    }
+    
+    // MARK: - ---------------------- ItemCreateModuleFactory --------------------------
+    //
+    func makeItemAddOutput() -> ItemCreatePresentable {
+        return ItemCreateController.controllerFromStoryboard(.create)
+    }
+    
+    // MARK: - ---------------------- SettingsModuleFactory --------------------------
+    //
+    func makeSettingsOutput() -> SettingsPresentable {
+        return SettingsController.controllerFromStoryboard(.settings)
+    }
 }

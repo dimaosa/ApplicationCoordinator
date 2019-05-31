@@ -1,10 +1,9 @@
 protocol Presentable {
-  func toPresent() -> UIViewController?
+    var uiViewController: UIViewController? { get }
 }
 
 extension UIViewController: Presentable {
-  
-  func toPresent() -> UIViewController? {
-    return self
-  }
+    var uiViewController: UIViewController? {
+        return self
+   }
 }

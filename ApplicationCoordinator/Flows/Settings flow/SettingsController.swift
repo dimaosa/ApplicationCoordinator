@@ -1,4 +1,6 @@
-final class SettingsController: UIViewController, SettingsView {
+protocol SettingsPresentable: BasePresentable { }
+
+final class SettingsController: UIViewController, SettingsPresentable {
   
   //controller handler
   
