@@ -98,7 +98,7 @@ final class AuthPresentableFactoryMock: AuthPresentableFactory {
         return loginController
     }
     
-    func makeSignUpHandler() -> SignUpPresentable {
+    func makeSignUpPresentable() -> SignUpPresentable {
         return signUpController
     }
     
