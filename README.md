@@ -81,6 +81,65 @@ class BaseCoordinator<T: ActionProtocol>: ActionableCoordinator {
     }
 }
 ```
+Each coordinator has it own set of action which is defined in the same file as Coordinator. ActionPrtotocl is an empty protocol which shuold be confirmed by Coordinator Actions
+```swift
+protocol ActionProtocol { }
+
+/// Empty action is used when Coordinator doesn't have any actions
+enum EmptyAction: ActionProtocol {}
+
+/// Action with a single responsibility to dismiss presented view
+enum DismissAction: ActionProtocol {
+    case dismissFlow
+}
+
+protocol CoordinatorAction: class {
+    associatedtype Action: ActionProtocol
+    var listener: Closure<Action>? { get set }
+}
+
+protocol Coordinator: class {
+    func start()
+    func start(with option: DeepLinkOption?)
+}
+
+typealias ActionableCoordinator = CoordinatorAction & Coordinator
+```
+Example of Coordinator
+```
+enum ItemCreateAction: ActionProtocol {
+    case dismissFlow
+    case item(ItemList)
+}
+
+final class ItemCreateCoordinator: BaseCoordinator<ItemCreateAction>{
+    
+  private let factory: ItemCreateModuleFactory
+  private let router: RouterProtocol
+  
+  init(router: RouterProtocol, factory: ItemCreateModuleFactory) {
+    self.factory = factory
+    self.router = router
+  }
+  
+  override func start() {
+    showCreate()
+  }
+  
+  //MARK: - Run current flow's controllers
+  
+  private func showCreate() {
+    let createItemOutput = factory.makeItemAddOutput()
+    createItemOutput.onCompleteCreateItem = { [weak self] item in
+      self?.listener?(.item(item))
+    }
+    createItemOutput.onHideButtonTap = { [weak self] in
+      self?.listener?(.dismissFlow)
+    }
+    router.setRootModule(createItemOutput)
+  }
+}
+```
 AppDelegate store lazy reference for the Application Coordinator
 ```swift
 var rootController: UINavigationController {
