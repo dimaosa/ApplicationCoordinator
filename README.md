@@ -21,7 +21,7 @@ protocol Coordinator: class {
 ```
 All flow controllers(views or viewcontrollers) have a protocols (we need to configure blocks and handle callbacks in coordinators):
 ```swift
-protocol ItemsListPresentable: BasePResentable {
+protocol ItemsListPresentable: BasePresentable {
     var authNeed: (() -> ())? { get set }
     var onItemSelect: (ItemList -> ())? { get set }
     var onCreateButtonTap: (() -> ())? { get set }
@@ -30,44 +30,54 @@ protocol ItemsListPresentable: BasePResentable {
 In this example I use factories for creating  coordinators and controllers (we can mock them in tests).
 ```swift
 protocol CoordinatorFactory {
-    func makeItemCoordinator(navController navController: UINavigationController?) -> Coordinator
-    func makeItemCoordinator() -> Coordinator
+    func makeTabbarCoordinator(router: RouterProtocol) -> Coordinator
+    func makeAuthCoordinatorBox(router: RouterProtocol) -> AuthCoordinator
     
-    func makeItemCreationCoordinatorBox(navController: UINavigationController?) ->
-        (configurator: Coordinator & ItemCreateCoordinatorOutput,
-        toPresent: Presentable?)
+    func makeOnboardingCoordinator(router: RouterProtocol) -> OnboardingCoordinator
 }
 ```
-The base coordinator stores dependencies of child coordinators
+The base coordinator stores dependencies of child coordinators (where Atomic is just a simple wrap)
 ```swift
-class BaseCoordinator: Coordinator {
+class BaseCoordinator<T: ActionProtocol>: ActionableCoordinator {
+    typealias Action = T
+    var listener: Closure<Action>?
+  
+    private var childCoordinators = Atomic<[Coordinator]>([])
     
-    var childCoordinators: [Coordinator] = []
-
-    func start() { }
+    func start() {
+        start(with: nil)
+    }
+    
     func start(with option: DeepLinkOption?) { }
     
     // add only unique object
     func addDependency(_ coordinator: Coordinator) {
-        
-        for element in childCoordinators {
-            if element === coordinator { return }
-        }
-        childCoordinators.append(coordinator)
+        guard !children.contains(where: { $0 === coordinator }) else { return }
+        childCoordinators.mutate({ $0.append(coordinator)} )
     }
     
     func removeDependency(_ coordinator: Coordinator?) {
         guard
-            childCoordinators.isEmpty == false,
+            children.isEmpty == false,
             let coordinator = coordinator
             else { return }
         
-        for (index, element) in childCoordinators.enumerated() {
-            if element === coordinator {
-                childCoordinators.remove(at: index)
-                break
-            }
+        // Clear child-coordinators recursively
+        if let coordinator = coordinator as? BaseCoordinator, !coordinator.children.isEmpty {
+            coordinator.children
+                .filter({ $0 !== coordinator })
+                .forEach({ coordinator.removeDependency($0) })
         }
+        for (index, element) in children.enumerated() where element === coordinator {
+            childCoordinators.mutate {
+                $0.remove(at: index)
+            }
+            break
+        }
+    }
+    
+    var children: [Coordinator] {
+        return childCoordinators.value
     }
 }
 ```
