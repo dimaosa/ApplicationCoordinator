@@ -14,8 +14,8 @@ class ItemCoordinatorTest: XCTestCase {
     private var coordinator: Coordinator!
     private var router: RouterMockProtocol!
     
-    private var itemListOutput: ItemsListPresentable!
-    private var itemDetailOutput: ItemDetailPresentable!
+    private var itemListPresentable: ItemsListPresentable!
+    private var itemDetailPresentable: ItemDetailPresentable!
     
     override func setUp() {
         super.setUp()
@@ -24,19 +24,19 @@ class ItemCoordinatorTest: XCTestCase {
         
         let itemListController = ItemsListController.controllerFromStoryboard(.items)
         let itemDetailController = ItemDetailController.controllerFromStoryboard(.items)
-        let factory = ItemModuleFactoryMock(itemListController: itemListController, itemDetailCntroller: itemDetailController)
+        let factory = ItemPresentableFactoryMock(itemListController: itemListController, itemDetailCntroller: itemDetailController)
         
         coordinator = ItemCoordinator(router: router, factory: factory, coordinatorFactory: CoordinatorFactory())
-        itemListOutput = itemListController
-        itemDetailOutput = itemDetailController
+        itemListPresentable = itemListController
+        itemDetailPresentable = itemDetailController
         
     }
     
     override func tearDown() {
         coordinator = nil
         router = nil
-        itemListOutput = nil
-        itemDetailOutput = nil
+        itemListPresentable = nil
+        itemDetailPresentable = nil
         
         super.tearDown()
     }
@@ -52,13 +52,13 @@ class ItemCoordinatorTest: XCTestCase {
     func testShowItemDetail() {
         
         coordinator.start()
-        itemListOutput.onItemSelect!(ItemList(title: "", subtitle: ""))
+        itemListPresentable.onItemSelect!(ItemList(title: "", subtitle: ""))
         XCTAssertTrue(router.navigationStack.last is ItemDetailController)
         XCTAssertTrue(router.navigationStack.count == 2)
     }
 }
 
-final class ItemModuleFactoryMock: ItemModuleFactory {
+final class ItemPresentableFactoryMock: ItemPresentableFactory {
     
     private let itemListController: ItemsListController
     private let itemDetailCntroller: ItemDetailController
@@ -70,11 +70,11 @@ final class ItemModuleFactoryMock: ItemModuleFactory {
         self.itemDetailCntroller = itemDetailCntroller
     }
     
-    func makeItemsOutput() -> ItemsListPresentable {
+    func makeItemsPresentable() -> ItemsListPresentable {
         return itemListController
     }
     
-    func makeItemDetailOutput(item: ItemList) -> ItemDetailPresentable {
+    func makeItemDetailPresentable(item: ItemList) -> ItemDetailPresentable {
         return itemDetailCntroller
     }
 }

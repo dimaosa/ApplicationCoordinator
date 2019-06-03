@@ -1,10 +1,10 @@
 final class ItemCoordinator: BaseCoordinator<EmptyAction> {
   
-  private let factory: ItemModuleFactory
+  private let factory: ItemPresentableFactory
   private let coordinatorFactory: CoordinatorFactoryProtocol
   private let router: RouterProtocol
   
-  init(router: RouterProtocol, factory: ItemModuleFactory, coordinatorFactory: CoordinatorFactoryProtocol) {
+  init(router: RouterProtocol, factory: ItemPresentableFactory, coordinatorFactory: CoordinatorFactoryProtocol) {
     self.router = router
     self.factory = factory
     self.coordinatorFactory = coordinatorFactory
@@ -18,29 +18,29 @@ final class ItemCoordinator: BaseCoordinator<EmptyAction> {
   
   private func showItemList() {
     
-    let itemsOutput = factory.makeItemsOutput()
-    itemsOutput.onItemSelect = { [weak self] (item) in
+    let itemsPresentable = factory.makeItemsPresentable()
+    itemsPresentable.onItemSelect = { [weak self] (item) in
       self?.showItemDetail(item)
     }
-    itemsOutput.onCreateItem = { [weak self] in
+    itemsPresentable.onCreateItem = { [weak self] in
       self?.runCreationFlow()
     }
-    router.setRootModule(itemsOutput)
+    router.setRootPresentable(itemsPresentable)
   }
   
   private func showItemDetail(_ item: ItemList) {
     
-    let itemDetailFlowOutput = factory.makeItemDetailOutput(item: item)
-    router.push(itemDetailFlowOutput, hideBottomBar: true)
+    let itemDetailFlowPresentable = factory.makeItemDetailPresentable(item: item)
+    router.push(itemDetailFlowPresentable, hideBottomBar: true)
   }
   
   //MARK: - Run coordinators (switch to another flow)
   
   private func runCreationFlow() {
     
-    let (coordinator, module) = coordinatorFactory.makeItemCreationCoordinatorBox()
+    let (coordinator, presentable) = coordinatorFactory.makeItemCreationCoordinatorBox()
     coordinator.listener = { [weak self, weak coordinator] action in
-        self?.router.dismissModule()
+        self?.router.dismissPresentable()
         self?.removeDependency(coordinator)
         switch action {
         case let .item(item):
@@ -50,7 +50,7 @@ final class ItemCoordinator: BaseCoordinator<EmptyAction> {
         }
     }
     addDependency(coordinator)
-    router.present(module)
+    router.present(presentable)
     coordinator.start()
   }
 }

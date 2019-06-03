@@ -2,12 +2,12 @@ class TabbarCoordinator: BaseCoordinator<EmptyAction> {
     
     private let coordinatorFactory: CoordinatorFactoryProtocol
     private let router: RouterProtocol
-    private let factory: TabBarModuleFactory
+    private let factory: TabBarPresentableFactory
     
-    init(router: RouterProtocol, coordinatorFactory: CoordinatorFactoryProtocol, moduleFactory: TabBarModuleFactory) {
+    init(router: RouterProtocol, coordinatorFactory: CoordinatorFactoryProtocol, presentableFactory: TabBarPresentableFactory) {
         self.router = router
         self.coordinatorFactory = coordinatorFactory
-        self.factory = moduleFactory
+        self.factory = presentableFactory
     }
     
     override func start() {
@@ -15,11 +15,11 @@ class TabbarCoordinator: BaseCoordinator<EmptyAction> {
     }
     
     private func showTabBar() {
-        let presentable = factory.tabBarModule()
+        let presentable = factory.tabBarPresentable()
         presentable.onViewDidLoad = runItemFlow()
         presentable.onItemFlowSelect = runItemFlow()
         presentable.onSettingsFlowSelect = runSettingsFlow()
-        router.setRootModule(presentable, hideBar: true)
+        router.setRootPresentable(presentable, hideBar: true)
     }
     
     private func runItemFlow() -> ((UINavigationController) -> ()) {

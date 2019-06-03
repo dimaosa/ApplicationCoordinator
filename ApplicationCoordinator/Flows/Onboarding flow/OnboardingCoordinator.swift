@@ -1,9 +1,9 @@
 
 class OnboardingCoordinator: BaseCoordinator<DismissAction> {
-    private let factory: OnboardingModuleFactory
+    private let factory: OnboardingPresentableFactory
     private let router: RouterProtocol
     
-    init(with factory: OnboardingModuleFactory, router: RouterProtocol) {
+    init(with factory: OnboardingPresentableFactory, router: RouterProtocol) {
         self.factory = factory
         self.router = router
     }
@@ -13,10 +13,10 @@ class OnboardingCoordinator: BaseCoordinator<DismissAction> {
     }
     
     func showOnboarding() {
-        let onboardingModule = factory.makeOnboardingModule()
-        onboardingModule.onFinish = { [weak self] in
+        let onboardingPresentable = factory.makeOnboardingPresentable()
+        onboardingPresentable.onFinish = { [weak self] in
             self?.listener?(.dismissFlow)
         }
-        router.setRootModule(onboardingModule.uiViewController)
+        router.setRootPresentable(onboardingPresentable.uiViewController)
     }
 }

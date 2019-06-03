@@ -1,24 +1,24 @@
 protocol RouterProtocol: Presentable {
     
-    func present(_ module: Presentable?)
-    func present(_ module: Presentable?, animated: Bool)
+    func present(_ presentable: Presentable?)
+    func present(_ presentable: Presentable?, animated: Bool)
     
-    func push(_ module: Presentable?)
-    func push(_ module: Presentable?, hideBottomBar: Bool)
-    func push(_ module: Presentable?, animated: Bool)
-    func push(_ module: Presentable?, animated: Bool, completion: CallbackClosure?)
-    func push(_ module: Presentable?, animated: Bool, hideBottomBar: Bool, completion: CallbackClosure?)
+    func push(_ presentable: Presentable?)
+    func push(_ presentable: Presentable?, hideBottomBar: Bool)
+    func push(_ presentable: Presentable?, animated: Bool)
+    func push(_ presentable: Presentable?, animated: Bool, completion: CallbackClosure?)
+    func push(_ presentable: Presentable?, animated: Bool, hideBottomBar: Bool, completion: CallbackClosure?)
     
-    func popModule()
-    func popModule(animated: Bool)
+    func popPresentable()
+    func popPresentable(animated: Bool)
     
-    func dismissModule()
-    func dismissModule(animated: Bool, completion: CallbackClosure?)
+    func dismissPresentable()
+    func dismissPresentable(animated: Bool, completion: CallbackClosure?)
     
-    func setRootModule(_ module: Presentable?)
-    func setRootModule(_ module: Presentable?, hideBar: Bool)
+    func setRootPresentable(_ presentable: Presentable?)
+    func setRootPresentable(_ presentable: Presentable?, hideBar: Bool)
     
-    func popToRootModule(animated: Bool)
+    func popToRootPresentable(animated: Bool)
 }
 
 final class Router: NSObject, RouterProtocol {
@@ -35,42 +35,42 @@ final class Router: NSObject, RouterProtocol {
         return rootController
     }
     
-    func present(_ module: Presentable?) {
-        present(module, animated: true)
+    func present(_ presentable: Presentable?) {
+        present(presentable, animated: true)
     }
     
-    func present(_ module: Presentable?, animated: Bool) {
-        guard let controller = module?.uiViewController else { return }
+    func present(_ presentable: Presentable?, animated: Bool) {
+        guard let controller = presentable?.uiViewController else { return }
         rootController?.present(controller, animated: animated, completion: nil)
     }
     
-    func dismissModule() {
-        dismissModule(animated: true, completion: nil)
+    func dismissPresentable() {
+        dismissPresentable(animated: true, completion: nil)
     }
     
-    func dismissModule(animated: Bool, completion: CallbackClosure?) {
+    func dismissPresentable(animated: Bool, completion: CallbackClosure?) {
         rootController?.dismiss(animated: animated, completion: completion)
     }
     
-    func push(_ module: Presentable?)  {
-        push(module, animated: true)
+    func push(_ presentable: Presentable?)  {
+        push(presentable, animated: true)
     }
     
-    func push(_ module: Presentable?, hideBottomBar: Bool)  {
-        push(module, animated: true, hideBottomBar: hideBottomBar, completion: nil)
+    func push(_ presentable: Presentable?, hideBottomBar: Bool)  {
+        push(presentable, animated: true, hideBottomBar: hideBottomBar, completion: nil)
     }
     
-    func push(_ module: Presentable?, animated: Bool)  {
-        push(module, animated: animated, completion: nil)
+    func push(_ presentable: Presentable?, animated: Bool)  {
+        push(presentable, animated: animated, completion: nil)
     }
     
-    func push(_ module: Presentable?, animated: Bool, completion: CallbackClosure?) {
-        push(module, animated: animated, hideBottomBar: false, completion: completion)
+    func push(_ presentable: Presentable?, animated: Bool, completion: CallbackClosure?) {
+        push(presentable, animated: animated, hideBottomBar: false, completion: completion)
     }
     
-    func push(_ module: Presentable?, animated: Bool, hideBottomBar: Bool, completion: CallbackClosure?) {
+    func push(_ presentable: Presentable?, animated: Bool, hideBottomBar: Bool, completion: CallbackClosure?) {
         guard
-            let controller = module?.uiViewController,
+            let controller = presentable?.uiViewController,
             (controller is UINavigationController == false)
             else { assertionFailure("Deprecated push UINavigationController."); return }
         
@@ -81,27 +81,27 @@ final class Router: NSObject, RouterProtocol {
         rootController?.pushViewController(controller, animated: animated)
     }
     
-    func popModule()  {
-        popModule(animated: true)
+    func popPresentable()  {
+        popPresentable(animated: true)
     }
     
-    func popModule(animated: Bool)  {
+    func popPresentable(animated: Bool)  {
         if let controller = rootController?.popViewController(animated: animated) {
             runCompletion(for: controller)
         }
     }
     
-    func setRootModule(_ module: Presentable?) {
-        setRootModule(module, hideBar: false)
+    func setRootPresentable(_ presentable: Presentable?) {
+        setRootPresentable(presentable, hideBar: false)
     }
     
-    func setRootModule(_ module: Presentable?, hideBar: Bool) {
-        guard let controller = module?.uiViewController else { return }
+    func setRootPresentable(_ presentable: Presentable?, hideBar: Bool) {
+        guard let controller = presentable?.uiViewController else { return }
         rootController?.setViewControllers([controller], animated: false)
         rootController?.isNavigationBarHidden = hideBar
     }
     
-    func popToRootModule(animated: Bool) {
+    func popToRootPresentable(animated: Bool) {
         if let controllers = rootController?.popToRootViewController(animated: animated) {
             controllers.forEach { controller in
                 runCompletion(for: controller)

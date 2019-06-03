@@ -1,9 +1,9 @@
 final class SettingsCoordinator: BaseCoordinator<EmptyAction> {
   
-  private let factory: SettingsModuleFactory
+  private let factory: SettingsPresentableFactory
   private let router: RouterProtocol
   
-  init(router: RouterProtocol, factory: SettingsModuleFactory) {
+  init(router: RouterProtocol, factory: SettingsPresentableFactory) {
     self.factory = factory
     self.router = router
   }
@@ -15,7 +15,7 @@ final class SettingsCoordinator: BaseCoordinator<EmptyAction> {
   //MARK: - Run current flow's controllers
   
   private func showSettings() {
-    let settingsFlowOutput = factory.makeSettingsOutput()
-    router.setRootModule(settingsFlowOutput)
+    let settingsFlowPresentable = factory.makeSettingsPresentable()
+    router.setRootPresentable(settingsFlowPresentable)
   }
 }

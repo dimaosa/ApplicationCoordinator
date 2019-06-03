@@ -1,11 +1,11 @@
 
 final class AuthCoordinator: BaseCoordinator<DismissAction> {
     
-  private let factory: AuthModuleFactory
+  private let factory: AuthPresentableFactory
   private let router: RouterProtocol
   private weak var signUpView: SignUpPresentable?
   
-  init(router: RouterProtocol, factory: AuthModuleFactory) {
+  init(router: RouterProtocol, factory: AuthPresentableFactory) {
     self.factory = factory
     self.router = router
   }
@@ -17,18 +17,18 @@ final class AuthCoordinator: BaseCoordinator<DismissAction> {
   //MARK: - Run current flow's controllers
   
   private func showLogin() {
-    let loginOutput = factory.makeLoginOutput()
-    loginOutput.onCompleteAuth = { [weak self] in
+    let loginPresentable = factory.makeLoginPresentable()
+    loginPresentable.onCompleteAuth = { [weak self] in
       self?.listener?(.dismissFlow)
     }
-    loginOutput.onSignUpButtonTap = { [weak self] in
+    loginPresentable.onSignUpButtonTap = { [weak self] in
       self?.showSignUp()
     }
-    router.setRootModule(loginOutput)
+    router.setRootPresentable(loginPresentable)
   }
   
   private func showSignUp() {
-    signUpView = factory.makeSignUpHandler()
+    signUpView = factory.makeSignUpPresentable()
     signUpView?.onSignUpComplete = { [weak self] in
       self?.listener?(.dismissFlow)
     }
@@ -39,12 +39,12 @@ final class AuthCoordinator: BaseCoordinator<DismissAction> {
   }
   
   private func showTerms() {
-    let termsOutput = factory.makeTermsOutput()
-    termsOutput.confirmed = self.signUpView?.confirmed ?? false
+    let termsPresentable = factory.makeTermsPresentable()
+    termsPresentable.confirmed = self.signUpView?.confirmed ?? false
     
-    termsOutput.onConfirmChanged = { [weak self] confirmed in
+    termsPresentable.onConfirmChanged = { [weak self] confirmed in
         self?.signUpView?.conformTermsAgreement(confirmed)
     }
-    router.push(termsOutput, animated: true)
+    router.push(termsPresentable, animated: true)
   }
 }

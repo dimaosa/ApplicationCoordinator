@@ -25,33 +25,33 @@ final class RouterMock: RouterMockProtocol {
     }
     
     //all of the actions without animation
-    func present(_ module: Presentable?) {
-        present(module, animated: false)
+    func present(_ presentable: Presentable?) {
+        present(presentable, animated: false)
     }
-    func present(_ module: Presentable?, animated: Bool) {
-        guard let controller = module?.uiViewController else { return }
+    func present(_ presentable: Presentable?, animated: Bool) {
+        guard let controller = presentable?.uiViewController else { return }
         presented = controller
     }
     
-    func push(_ module: Presentable?)  {
-        push(module, animated: true)
+    func push(_ presentable: Presentable?)  {
+        push(presentable, animated: true)
     }
     
-    func push(_ module: Presentable?, hideBottomBar: Bool)  {
-        push(module, animated: true, hideBottomBar: hideBottomBar, completion: nil)
+    func push(_ presentable: Presentable?, hideBottomBar: Bool)  {
+        push(presentable, animated: true, hideBottomBar: hideBottomBar, completion: nil)
     }
     
-    func push(_ module: Presentable?, animated: Bool)  {
-        push(module, animated: animated, completion: nil)
+    func push(_ presentable: Presentable?, animated: Bool)  {
+        push(presentable, animated: animated, completion: nil)
     }
     
-    func push(_ module: Presentable?, animated: Bool, completion: CallbackClosure?) {
-        push(module, animated: animated, hideBottomBar: false, completion: completion)
+    func push(_ presentable: Presentable?, animated: Bool, completion: CallbackClosure?) {
+        push(presentable, animated: animated, hideBottomBar: false, completion: completion)
     }
     
-    func push(_ module: Presentable?, animated: Bool, hideBottomBar: Bool, completion: CallbackClosure?) {
+    func push(_ presentable: Presentable?, animated: Bool, hideBottomBar: Bool, completion: CallbackClosure?) {
         guard
-            let controller = module?.uiViewController,
+            let controller = presentable?.uiViewController,
             (controller is UINavigationController == false)
             else { assertionFailure("Deprecated push UINavigationController."); return }
         
@@ -62,33 +62,33 @@ final class RouterMock: RouterMockProtocol {
         navigationStack.append(controller)
     }
     
-    func popModule()  {
-        popModule(animated: false)
+    func popPresentable()  {
+        popPresentable(animated: false)
     }
     
-    func popModule(animated: Bool)  {
+    func popPresentable(animated: Bool)  {
         let controller = navigationStack.removeLast()
         runCompletion(for: controller)
     }
     
-    func dismissModule() {
-        dismissModule(animated: false, completion: nil)
+    func dismissPresentable() {
+        dismissPresentable(animated: false, completion: nil)
     }
     
-    func dismissModule(animated: Bool, completion: CallbackClosure?) {
+    func dismissPresentable(animated: Bool, completion: CallbackClosure?) {
         presented = nil
     }
     
-    func setRootModule(_ module: Presentable?) {
-        guard let controller = module?.uiViewController else { return }
+    func setRootPresentable(_ presentable: Presentable?) {
+        guard let controller = presentable?.uiViewController else { return }
         navigationStack.append(controller)
     }
     
-    func setRootModule(_ module: Presentable?, hideBar: Bool) {
+    func setRootPresentable(_ presentable: Presentable?, hideBar: Bool) {
         assertionFailure("This method is not used.")
     }
 
-    func popToRootModule(animated: Bool) {
+    func popToRootPresentable(animated: Bool) {
         guard let first = navigationStack.first else { return }
         
         navigationStack.forEach { controller in

@@ -5,10 +5,10 @@ enum ItemCreateAction: ActionProtocol {
 
 final class ItemCreateCoordinator: BaseCoordinator<ItemCreateAction>{
     
-  private let factory: ItemCreateModuleFactory
+  private let factory: ItemCreatePresentableFactory
   private let router: RouterProtocol
   
-  init(router: RouterProtocol, factory: ItemCreateModuleFactory) {
+  init(router: RouterProtocol, factory: ItemCreatePresentableFactory) {
     self.factory = factory
     self.router = router
   }
@@ -20,13 +20,13 @@ final class ItemCreateCoordinator: BaseCoordinator<ItemCreateAction>{
   //MARK: - Run current flow's controllers
   
   private func showCreate() {
-    let createItemOutput = factory.makeItemAddOutput()
-    createItemOutput.onCompleteCreateItem = { [weak self] item in
+    let createItemPresentable = factory.makeItemAddPresentable()
+    createItemPresentable.onCompleteCreateItem = { [weak self] item in
       self?.listener?(.item(item))
     }
-    createItemOutput.onHideButtonTap = { [weak self] in
+    createItemPresentable.onHideButtonTap = { [weak self] in
       self?.listener?(.dismissFlow)
     }
-    router.setRootModule(createItemOutput)
+    router.setRootPresentable(createItemPresentable)
   }
 }

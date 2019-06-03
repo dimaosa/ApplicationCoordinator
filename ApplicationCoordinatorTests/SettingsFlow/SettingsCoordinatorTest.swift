@@ -18,7 +18,7 @@
 //        super.setUp()
 //        
 //        router = RouterMockImp()
-//        coordinator = SettingsCoordinator(router: router, factory: ModuleFactoryImp())
+//        coordinator = SettingsCoordinator(router: router, factory: PresentableFactoryImp())
 //    }
 //    
 //    override func tearDown() {

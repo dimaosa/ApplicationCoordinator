@@ -36,54 +36,54 @@ class RouterTest: XCTestCase {
         super.tearDown()
     }
     
-    func testRouterSetRootModule() {
+    func testRouterSetRootPresentable() {
         
-        router.setRootModule(firstController)
+        router.setRootPresentable(firstController)
         XCTAssertTrue(router.navigationStack.first is ItemsListController)
     }
     
-    func testRouterPushViewModule() {
+    func testRouterPushViewPresentable() {
         
-        router.setRootModule(firstController)
+        router.setRootPresentable(firstController)
         XCTAssertTrue(router.navigationStack.last is ItemsListController)
         router.push(secondController)
         XCTAssertTrue(router.navigationStack.last is ItemDetailController)
     }
     
-    func testRouterPopViewModule() {
+    func testRouterPopViewPresentable() {
         
-        router.setRootModule(firstController)
+        router.setRootPresentable(firstController)
         XCTAssertTrue(router.navigationStack.last is ItemsListController)
         router.push(secondController)
         XCTAssertTrue(router.navigationStack.last is ItemDetailController)
         
-        router.popModule()
+        router.popPresentable()
         XCTAssertTrue(router.navigationStack.last is ItemsListController)
     }
     
-    func testRouterPopToRootViewModule() {
+    func testRouterPopToRootViewPresentable() {
         
-        router.setRootModule(firstController)
+        router.setRootPresentable(firstController)
         XCTAssertTrue(router.navigationStack.last is ItemsListController)
         router.push(secondController)
         XCTAssertTrue(router.navigationStack.last is ItemDetailController)
         router.push(thirdController)
         XCTAssertTrue(router.navigationStack.last is SettingsController)
         
-        router.popToRootModule(animated: false)
+        router.popToRootPresentable(animated: false)
         XCTAssertTrue(router.navigationStack.last is ItemsListController)
     }
     
-    func testPresentViewModule() {
+    func testPresentViewPresentable() {
         router.present(secondController)
         XCTAssertTrue(router.presented is ItemDetailController)
     }
     
-    func testDismissViewModule() {
+    func testDismissViewPresentable() {
         
         router.present(secondController)
         XCTAssertTrue(router.presented is ItemDetailController)
-        router.dismissModule()
+        router.dismissPresentable()
         XCTAssertTrue(router.presented == nil)
     }
 }
