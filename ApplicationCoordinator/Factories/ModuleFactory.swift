@@ -1,4 +1,4 @@
-protocol ModuleFactoryProtocol: AuthModuleFactory, OnboardingModuleFactory, ItemModuleFactory, ItemCreateModuleFactory, SettingsModuleFactory {}
+protocol ModuleFactoryProtocol: AuthModuleFactory, OnboardingModuleFactory, ItemModuleFactory, ItemCreateModuleFactory, SettingsModuleFactory, TabBarModuleFactory {}
 
 final class ModuleFactory: ModuleFactoryProtocol {
     
@@ -44,5 +44,11 @@ final class ModuleFactory: ModuleFactoryProtocol {
     //
     func makeSettingsOutput() -> SettingsPresentable {
         return SettingsController.controllerFromStoryboard(.settings)
+    }
+    
+    // MARK: - ---------------------- TabBarModuleFactory --------------------------
+    //
+    func tabBarModule() -> TabbarPresentable {
+        return TabbarController.controllerFromStoryboard(.tabBar)
     }
 }

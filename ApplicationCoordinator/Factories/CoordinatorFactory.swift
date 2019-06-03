@@ -1,6 +1,6 @@
 protocol CoordinatorFactoryProtocol {
     
-    func makeTabbarCoordinator() -> (configurator: Coordinator, toPresent: Presentable?)
+    func makeTabbarCoordinator(router: RouterProtocol) -> Coordinator
     func makeAuthCoordinatorBox(router: RouterProtocol) -> AuthCoordinator
     
     func makeOnboardingCoordinator(router: RouterProtocol) -> OnboardingCoordinator
@@ -18,15 +18,12 @@ protocol CoordinatorFactoryProtocol {
 
 final class CoordinatorFactory: CoordinatorFactoryProtocol {
     
-    func makeTabbarCoordinator() -> (configurator: Coordinator, toPresent: Presentable?) {
-        let controller = TabbarController.controllerFromStoryboard(.main)
-        let coordinator = TabbarCoordinator(tabbarPresentable: controller, coordinatorFactory: CoordinatorFactory())
-        return (coordinator, controller)
+    func makeTabbarCoordinator(router: RouterProtocol) -> Coordinator {
+        return TabbarCoordinator(router: router, coordinatorFactory: CoordinatorFactory(), moduleFactory: ModuleFactory())
     }
     
     func makeAuthCoordinatorBox(router: RouterProtocol) -> AuthCoordinator {
-        let coordinator = AuthCoordinator(router: router, factory: ModuleFactory())
-        return coordinator
+        return AuthCoordinator(router: router, factory: ModuleFactory())
     }
     
     func makeItemCoordinator() -> Coordinator {
@@ -46,8 +43,7 @@ final class CoordinatorFactory: CoordinatorFactoryProtocol {
     }
     
     func makeSettingsCoordinator(navController: UINavigationController? = nil) -> Coordinator {
-        let coordinator = SettingsCoordinator(router: router(navController), factory: ModuleFactory())
-        return coordinator
+        return SettingsCoordinator(router: router(navController), factory: ModuleFactory())
     }
     
     func makeItemCreationCoordinatorBox() -> (configurator: ItemCreateCoordinator, toPresent: Presentable?) {

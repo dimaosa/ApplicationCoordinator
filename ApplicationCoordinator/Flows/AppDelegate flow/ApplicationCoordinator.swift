@@ -80,9 +80,8 @@ final class ApplicationCoordinator: BaseCoordinator<EmptyAction> {
     }
     
     private func runMainFlow() {
-        let (coordinator, module) = coordinatorFactory.makeTabbarCoordinator()
+        let coordinator = coordinatorFactory.makeTabbarCoordinator(router: router)
         addDependency(coordinator)
-        router.setRootModule(module, hideBar: true)
         coordinator.start()
     }
 }

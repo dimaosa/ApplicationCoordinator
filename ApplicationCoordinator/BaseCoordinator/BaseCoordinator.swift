@@ -1,4 +1,4 @@
-class BaseCoordinator<T: ActionProtocol>: Coordinator, CoordinatorAction {
+class BaseCoordinator<T: ActionProtocol>: ActionableCoordinator {
     typealias Action = T
     var listener: Closure<Action>?
   

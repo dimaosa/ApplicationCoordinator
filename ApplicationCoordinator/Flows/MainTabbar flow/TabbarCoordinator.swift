@@ -1,17 +1,25 @@
 class TabbarCoordinator: BaseCoordinator<EmptyAction> {
     
-    private let tabbarPresentable: TabbarPresentable
     private let coordinatorFactory: CoordinatorFactoryProtocol
+    private let router: RouterProtocol
+    private let factory: TabBarModuleFactory
     
-    init(tabbarPresentable: TabbarPresentable, coordinatorFactory: CoordinatorFactoryProtocol) {
-        self.tabbarPresentable = tabbarPresentable
+    init(router: RouterProtocol, coordinatorFactory: CoordinatorFactoryProtocol, moduleFactory: TabBarModuleFactory) {
+        self.router = router
         self.coordinatorFactory = coordinatorFactory
+        self.factory = moduleFactory
     }
     
     override func start() {
-        tabbarPresentable.onViewDidLoad = runItemFlow()
-        tabbarPresentable.onItemFlowSelect = runItemFlow()
-        tabbarPresentable.onSettingsFlowSelect = runSettingsFlow()
+        showTabBar()
+    }
+    
+    private func showTabBar() {
+        let presentable = factory.tabBarModule()
+        presentable.onViewDidLoad = runItemFlow()
+        presentable.onItemFlowSelect = runItemFlow()
+        presentable.onSettingsFlowSelect = runSettingsFlow()
+        router.setRootModule(presentable, hideBar: true)
     }
     
     private func runItemFlow() -> ((UINavigationController) -> ()) {
