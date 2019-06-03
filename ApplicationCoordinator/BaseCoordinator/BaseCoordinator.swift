@@ -1,8 +1,9 @@
+
 class BaseCoordinator<T: ActionProtocol>: ActionableCoordinator {
     typealias Action = T
     var listener: Closure<Action>?
   
-    var childCoordinators: [Coordinator] = []
+    private var childCoordinators = Atomic<[Coordinator]>([])
     
     func start() {
         start(with: nil)
@@ -12,25 +13,31 @@ class BaseCoordinator<T: ActionProtocol>: ActionableCoordinator {
     
     // add only unique object
     func addDependency(_ coordinator: Coordinator) {
-        guard !childCoordinators.contains(where: { $0 === coordinator }) else { return }
-        childCoordinators.append(coordinator)
+        guard !children.contains(where: { $0 === coordinator }) else { return }
+        childCoordinators.mutate({ $0.append(coordinator)} )
     }
     
     func removeDependency(_ coordinator: Coordinator?) {
         guard
-            childCoordinators.isEmpty == false,
+            children.isEmpty == false,
             let coordinator = coordinator
             else { return }
         
         // Clear child-coordinators recursively
-        if let coordinator = coordinator as? BaseCoordinator, !coordinator.childCoordinators.isEmpty {
-            coordinator.childCoordinators
+        if let coordinator = coordinator as? BaseCoordinator, !coordinator.children.isEmpty {
+            coordinator.children
                 .filter({ $0 !== coordinator })
                 .forEach({ coordinator.removeDependency($0) })
         }
-        for (index, element) in childCoordinators.enumerated() where element === coordinator {
-            childCoordinators.remove(at: index)
+        for (index, element) in children.enumerated() where element === coordinator {
+            childCoordinators.mutate {
+                $0.remove(at: index)
+            }
             break
         }
+    }
+    
+    var children: [Coordinator] {
+        return childCoordinators.value
     }
 }

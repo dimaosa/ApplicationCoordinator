@@ -37,7 +37,7 @@ final class ApplicationCoordinator: BaseCoordinator<EmptyAction> {
             case .onboarding: runOnboardingFlow()
             case .signUp: runAuthFlow()
             default:
-                childCoordinators.forEach { coordinator in
+                children.forEach { coordinator in
                     coordinator.start(with: option)
                 }
             }

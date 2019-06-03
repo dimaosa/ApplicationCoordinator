@@ -25,28 +25,28 @@ class BaseCoordinatorTest: XCTestCase {
     }
     
     func testCoordinatorArrayInitializedOfEmptyArray() {
-        XCTAssertTrue(coordinator.childCoordinators.isEmpty)
+        XCTAssertTrue(coordinator.children.isEmpty)
     }
     
     func testCoordinatorAddDependency() {
         coordinator.addDependency(coordinator)
-        XCTAssertTrue(coordinator.childCoordinators.first is BaseCoordinator<EmptyAction>)
-        XCTAssertTrue(coordinator.childCoordinators.count == 1)
+        XCTAssertTrue(coordinator.children.first is BaseCoordinator<EmptyAction>)
+        XCTAssertTrue(coordinator.children.count == 1)
         coordinator.addDependency(coordinator)
-        XCTAssertTrue(coordinator.childCoordinators.count == 1, "Only unique reference could be added")
+        XCTAssertTrue(coordinator.children.count == 1, "Only unique reference could be added")
         
         let newCoordinator = BaseCoordinator<DismissAction>()
         coordinator.addDependency(newCoordinator)
-        XCTAssertTrue(coordinator.childCoordinators.count == 2)
+        XCTAssertTrue(coordinator.children.count == 2)
     }
     
     func testCoordinatorRemoveDependency() {
         
         coordinator.addDependency(coordinator)
-        XCTAssertTrue(coordinator.childCoordinators.first is BaseCoordinator<EmptyAction>)
+        XCTAssertTrue(coordinator.children.first is BaseCoordinator<EmptyAction>)
         coordinator.removeDependency(coordinator)
-        XCTAssertTrue(coordinator.childCoordinators.isEmpty)
+        XCTAssertTrue(coordinator.children.isEmpty)
         coordinator.removeDependency(coordinator)
-        XCTAssertTrue(coordinator.childCoordinators.isEmpty, "If we try to remove removed referense, crush can't happend")
+        XCTAssertTrue(coordinator.children.isEmpty, "If we try to remove removed referense, crush can't happend")
     }
 }
