@@ -106,7 +106,7 @@ protocol Coordinator: class {
 typealias ActionableCoordinator = CoordinatorAction & Coordinator
 ```
 Example of Coordinator
-```
+```swift
 enum ItemCreateAction: ActionProtocol {
     case dismissFlow
     case item(ItemList)
