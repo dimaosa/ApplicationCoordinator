@@ -7,8 +7,8 @@ Based on the post about Application Coordinators [khanlou.com](http://khanlou.co
 1. Coordinators Essential tutorial. Part I [medium.com](https://medium.com/blacklane-engineering/coordinators-essential-tutorial-part-i-376c836e9ba7)
 2. Coordinators Essential tutorial. Part II [medium.com](https://medium.com/@panovdev/coordinators-essential-tutorial-part-ii-b5ab3eb4a74)
 3. Coordinators, Routers, and Back Buttons [link](https://hackernoon.com/coordinators-routers-and-back-buttons-c58b021b32a)
-4. Back Buttons and Coordinators [link](http://khanlou.com/tag/advanced-coordinators/)
-
+4. A series of advanced coordinators [link](http://khanlou.com/tag/advanced-coordinators/)
+5. Improve your iOS Architecture with FlowControllers [link](http://merowing.info/2016/01/improve-your-ios-architecture-with-flowcontrollers/)
 
 Example provides very basic structure with 6 controllers and 5 coordinators with mock data and logic.
 ![](/str.jpg)
