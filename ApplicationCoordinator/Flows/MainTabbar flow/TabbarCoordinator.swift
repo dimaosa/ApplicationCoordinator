@@ -1,13 +1,13 @@
 class TabbarCoordinator: BaseCoordinator<EmptyAction> {
     
     private let coordinatorFactory: CoordinatorFactoryProtocol
+    private let presentableFactory: TabBarPresentableFactory
     private let router: RouterProtocol
-    private let factory: TabBarPresentableFactory
     
     init(router: RouterProtocol, coordinatorFactory: CoordinatorFactoryProtocol, presentableFactory: TabBarPresentableFactory) {
         self.router = router
         self.coordinatorFactory = coordinatorFactory
-        self.factory = presentableFactory
+        self.presentableFactory = presentableFactory
     }
     
     override func start() {
@@ -15,7 +15,7 @@ class TabbarCoordinator: BaseCoordinator<EmptyAction> {
     }
     
     private func showTabBar() {
-        let presentable = factory.tabBarPresentable()
+        let presentable = presentableFactory.tabBarPresentable()
         presentable.onViewDidLoad = runItemFlow()
         presentable.onItemFlowSelect = runItemFlow()
         presentable.onSettingsFlowSelect = runSettingsFlow()

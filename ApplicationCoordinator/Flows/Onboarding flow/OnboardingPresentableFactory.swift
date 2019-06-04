@@ -1,3 +1,3 @@
 protocol OnboardingPresentableFactory {
-  func makeOnboardingPresentable() -> OnboardingPresentable
+    func makeOnboardingPresentable() -> OnboardingPresentable
 }

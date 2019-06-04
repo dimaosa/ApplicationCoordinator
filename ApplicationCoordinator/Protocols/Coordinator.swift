@@ -16,6 +16,9 @@ protocol CoordinatorAction: class {
 protocol Coordinator: class {
     func start()
     func start(with option: DeepLinkOption?)
+    
+    func addDependency(_ coordinator: Coordinator)
+    func removeDependency(_ coordinator: Coordinator?)
 }
 
 typealias ActionableCoordinator = CoordinatorAction & Coordinator

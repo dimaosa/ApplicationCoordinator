@@ -3,30 +3,31 @@ enum ItemCreateAction: ActionProtocol {
     case item(ItemList)
 }
 
-final class ItemCreateCoordinator: BaseCoordinator<ItemCreateAction>{
+final class ItemCreateCoordinator: BaseCoordinator<ItemCreateAction> {
     
-  private let factory: ItemCreatePresentableFactory
-  private let router: RouterProtocol
-  
-  init(router: RouterProtocol, factory: ItemCreatePresentableFactory) {
-    self.factory = factory
-    self.router = router
-  }
-  
-  override func start() {
-    showCreate()
-  }
-  
-  //MARK: - Run current flow's controllers
-  
-  private func showCreate() {
-    let createItemPresentable = factory.makeItemAddPresentable()
-    createItemPresentable.onCompleteCreateItem = { [weak self] item in
-      self?.listener?(.item(item))
+    private let factory: ItemCreatePresentableFactory
+    private let router: RouterProtocol
+    
+    init(router: RouterProtocol, factory: ItemCreatePresentableFactory) {
+        self.factory = factory
+        self.router = router
     }
-    createItemPresentable.onHideButtonTap = { [weak self] in
-      self?.listener?(.dismissFlow)
+    
+    override func start() {
+        showCreate()
     }
-    router.setRootPresentable(createItemPresentable)
-  }
+    
+    //MARK: - Run current flow's controllers
+    
+    private func showCreate() {
+        let createItemPresentable = factory.makeItemAddPresentable()
+        createItemPresentable.onCompleteCreateItem = { [weak self] item in
+            self?.listener?(.item(item))
+        }
+        createItemPresentable.onHideButtonTap = { [weak self] in
+            self?.listener?(.dismissFlow)
+        }
+        router.setRootPresentable(createItemPresentable)
+    }
 }
+

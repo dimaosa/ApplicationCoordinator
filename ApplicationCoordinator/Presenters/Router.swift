@@ -21,7 +21,7 @@ protocol RouterProtocol: Presentable {
     func popToRootPresentable(animated: Bool)
 }
 
-final class Router: NSObject, RouterProtocol {
+final class Router: NSObject, RouterProtocol, UINavigationControllerDelegate {
     
     private weak var rootController: UINavigationController?
     private var completions: [UIViewController : CallbackClosure]
@@ -29,6 +29,8 @@ final class Router: NSObject, RouterProtocol {
     init(rootController: UINavigationController) {
         self.rootController = rootController
         completions = [:]
+        super.init()
+        self.rootController?.delegate = self
     }
     
     var uiViewController: UIViewController? {
@@ -113,5 +115,18 @@ final class Router: NSObject, RouterProtocol {
         guard let completion = completions[controller] else { return }
         completion()
         completions.removeValue(forKey: controller)
+    }
+    
+    // MARK: - ---------------------- UINavigationControllerDelegate --------------------------
+    //
+    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        
+        // Ensure the view controller is popping
+        guard let poppedViewController = navigationController.transitionCoordinator?.viewController(forKey: .from),
+            !navigationController.viewControllers.contains(poppedViewController) else {
+                return
+        }
+        
+        runCompletion(for: poppedViewController)
     }
 }
