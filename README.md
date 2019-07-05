@@ -3,6 +3,8 @@ A lot of developers need to change navigation flow frequently, because it depend
 
 Based on the post about Application Coordinators [khanlou.com](http://khanlou.com/2015/10/coordinators-redux/) and Application Controller pattern description [martinfowler.com](http://martinfowler.com/eaaCatalog/applicationController.html).
 
+# Link to presentation - https://speakerdeck.com/dimaosa/flow-coordinators-in-ios
+
 ## The code is based on following articles:
 1. Coordinators Essential tutorial. Part I [medium.com](https://medium.com/blacklane-engineering/coordinators-essential-tutorial-part-i-376c836e9ba7)
 2. Coordinators Essential tutorial. Part II [medium.com](https://medium.com/@panovdev/coordinators-essential-tutorial-part-ii-b5ab3eb4a74)
